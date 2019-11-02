@@ -37,8 +37,8 @@ def main():
     LEAVE_Z = 0.20                  # 離れる時のハンドの高さ
     PICK_Z = 0.12                   # 掴む時のハンドの高さ
     PLACE_POSITIONS = [             # オブジェクトの設置位置 (ランダムに設置する)
-            Point(0.2, 0.2, 0.0),
-            Point(0.3, 0.3, 0.0)]
+            Point(0.2, 0.2, 0.2),
+            Point(0.2, 0.0, 0.2)]
 
     sub_model_states = rospy.Subscriber("gazebo/model_states", ModelStates, callback, queue_size=1)
 
@@ -64,7 +64,7 @@ def main():
 
         # 一定時間待機する
         # この間に、ユーザがgazebo上のオブジェクト姿勢を変更しても良い
-        sleep_time = 3.0
+        sleep_time = 2.0
         print "Wait " + str(sleep_time) + " secs."
         rospy.sleep(sleep_time)
         print "Start"
@@ -124,14 +124,18 @@ def main():
             target_pose.orientation.w = q[3]
             arm.set_pose_target(target_pose)
             print "armgo"
-            rospy.sleep(2.0)
-            print "sleep end"
-            gripper_goal.command.position = GRIPPER_OPEN
-            gripper.send_goal(gripper_goal)
-            gripper.wait_for_result(rospy.Duration(1.0))
             if arm.go() is False:	
                 print "Failed to approach target position."
                 continue
+            print "go end"
+            rospy.sleep(3.0)
+            print "sleep end"
+            gripper_goal.command.position = GRIPPER_OPEN
+            print "grinppercommand end"
+            gripper.send_goal(gripper_goal)
+            print "grippersendgoal end"
+            gripper.wait_for_result(rospy.Duration(1.0))
+            print "gripperwait end"
             rospy.sleep(1.0)
 
             """
