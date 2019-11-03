@@ -27,9 +27,42 @@ class ArmJointTrajectoryExample(object):
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint", "crane_x7_shoulder_revolute_part_tilt_joint",
                                        "crane_x7_upper_arm_revolute_part_twist_joint", "crane_x7_upper_arm_revolute_part_rotate_joint",
-                                       "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint","crane_x7_wrist_joint"]
+                                       "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint","crane_x7_wrist_joint",]
 
-        joint_values = [-30.0, -10.0, -30.0, 0.0, -20.0]
+          
+       # goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint"]
+        
+        print"Goal"
+        print(goal)
+
+        point = JointTrajectoryPoint()
+
+        print"Point"
+        print(point)
+
+        point.positions.append(math.radians(30.0))
+        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(0.0))
+        
+        point.time_from_start = rospy.Duration(secs=1.0)
+
+
+        print"\n\nPoint append positions and time "
+        print(point)
+        
+        goal.trajectory.points.append(point)
+
+        print"\n\nGoal.append"
+        print(goal)
+        self._client.send_goal(goal)
+        self._client.wait_for_result(timeout=rospy.Duration(100.0))
+        return self._client.get_result()
+        
+        """joint_values = [-30.0, -10.0, -30.0, 0.0, -20.0]
         joint_values.extend(reversed(joint_values))
         for i, p in enumerate(joint_values):
             point = JointTrajectoryPoint()
@@ -40,6 +73,7 @@ class ArmJointTrajectoryExample(object):
         self._client.send_goal(goal)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         return self._client.get_result()
+        """
 
 
 if __name__ == "__main__":
