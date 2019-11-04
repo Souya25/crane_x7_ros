@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="CRANE-X7 with Table">
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="table">
+      <include>
+        <uri>model://table</uri>
+      </include>
+
+      <!-- X7を机の端に配置するため、机を移動、回転する -->
+      <pose>0.29 0 0 0 0 1.5708</pose>
+    </model>
+
+    <!--    <model name="wood_cube_5cm">
+      <include>
+        <uri>model://wood_cube_5cm</uri>
+      </include>
+      <pose>0.20 0 1.0 0 0 0</pose>
+    </model>
+    -->
+
+  <model name="unko">
+    <pose>0 0 1.05 0 0 0</pose>
+    <link name="unko_3">
+      <pose>0.2 0 0 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1e-4</iyy>
+          <iyz>0.0</iyz>
+          <izz>1e-4</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+		  <radius>0.05</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+		  <radius>0.05</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+ <!-- </model>-->
+  
+  
+  <joint name="unko_32_joint" type="fixed">
+      <parent>unko_3</parent>
+      <child>unko_2</child>
+      <pose>0.2 0 0.03 0 0</pose>
+    
+    
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+  </joint>
+
+
+
+
+ <!-- <model name="unko2">
+    <pose>0.2 0 1.09 0 0 0</pose>
+-->
+ 
+    <link name="unko_2">
+      <pose>0.2 0 0.03 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1e-4</iyy>
+          <iyz>0.0</iyz>
+          <izz>1e-4</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+		  <radius>0.04</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+		  <radius>0.04</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+<!--  </model>-->
+
+
+  <joint name="unko_21_joint" type="fixed">
+       <parent>unko_2</parent>
+       <child>unko_1</child>
+       <pose>0.2 0 0.06 0 0</pose>
+       <axis>
+          <xyz>0 0 1</xyz>
+       </axis>
+   </joint>
+
+
+<!--  <model name="unko1">
+    <pose>0.2 0 1.13 0 0 0</pose>
+--> 
+    <link name="unko_1">
+      <pose>0.2 0 0.06 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-4</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1e-4</iyy>
+          <iyz>0.0</iyz>
+          <izz>1e-4</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+		  <radius>0.03</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+		  <radius>0.03</radius>
+		  <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+
+
+
+
+    <model name="ground_plane">
+      <include>
+        <uri>model://ground_plane</uri>
+      </include>
+
+      <joint name='ground_joint' type='fixed'>
+        <parent>ground_plane::link</parent>
+        <child>table::link</child>
+      </joint>
+    </model>
+  </world>
+</sdf>

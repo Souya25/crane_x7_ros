@@ -41,12 +41,12 @@ class ArmJointTrajectoryExample(object):
         print(point)
 
         point.positions.append(math.radians(30.0))
-        point.positions.append(math.radians(0.0))
-        point.positions.append(math.radians(0.0))
-        point.positions.append(math.radians(0.0))
-        point.positions.append(math.radians(0.0))
-        point.positions.append(math.radians(0.0))
-        point.positions.append(math.radians(0.0))
+        point.positions.append(math.radians(-30.0))
+        point.positions.append(math.radians(30.0))
+        point.positions.append(math.radians(-100.0))
+        point.positions.append(math.radians(30.0))
+        point.positions.append(math.radians(10.0))
+        point.positions.append(math.radians(30.0))
         
         point.time_from_start = rospy.Duration(secs=1.0)
 
