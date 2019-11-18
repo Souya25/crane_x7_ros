@@ -51,14 +51,14 @@ class PRESET_RECONFIGURE:
 
         ### プリセット定義 - 3 ティーチングサンプル用のPIDゲイン ###
         self.preset_3 = [   
-                            { "name":"crane_x7_shoulder_fixed_part_pan_joint",          "p_gain": 5, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_shoulder_revolute_part_tilt_joint",      "p_gain": 5, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_upper_arm_revolute_part_twist_joint",    "p_gain": 5, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_upper_arm_revolute_part_rotate_joint",   "p_gain": 5, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_lower_arm_fixed_part_joint",             "p_gain": 1, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_lower_arm_revolute_part_joint",          "p_gain": 1, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_wrist_joint",                            "p_gain": 1, "i_gain": 0, "d_gain": 0 },\
-                            { "name":"crane_x7_gripper_finger_a_joint",                 "p_gain": 1, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_shoulder_fixed_part_pan_joint",          "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_shoulder_revolute_part_tilt_joint",      "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_upper_arm_revolute_part_twist_joint",    "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_upper_arm_revolute_part_rotate_joint",   "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_lower_arm_fixed_part_joint",             "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_lower_arm_revolute_part_joint",          "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_wrist_joint",                            "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
+                            { "name":"crane_x7_gripper_finger_a_joint",                 "p_gain": 0, "i_gain": 0, "d_gain": 0 },\
                         ]
 
         ### プリセット定義 - 4 未設定。モノを掴んだ時や、アームの形状を変えた時に設定してみてください ###
