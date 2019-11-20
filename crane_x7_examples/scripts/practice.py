@@ -29,10 +29,10 @@ def yaw_of(object_orientation):
 
 def main():
     global gazebo_model_states
-    TARGET_X = -0.30 #目標の位置
-    TARGET_Y = -0.10
-    TARGET_Z = 0.30
-    OBJECT_NAME = "wood_cube_5cm"   # 掴むオブジェクトの名前
+    TARGET_X = 0.2 #目標の位置
+    TARGET_Y = 0.0
+    TARGET_Z = 0.1
+    OBJECT_NAME = "unko"   # 掴むオブジェクトの名前
     GRIPPER_OPEN = 1.2              # 掴む時のハンド開閉角度
     GRIPPER_CLOSE = 0.42            # 設置時のハンド開閉角度
     APPROACH_Z = 0.15               # 接近時のハンドの高さ
@@ -70,7 +70,7 @@ def main():
         print "Wait " + str(sleep_time) + " secs."
         rospy.sleep(sleep_time)
         print "Start"
-
+        
         # オブジェクトがgazebo上に存在すれば、pick_and_placeを実行する
         if OBJECT_NAME in gazebo_model_states.name:
             object_index = gazebo_model_states.name.index(OBJECT_NAME)
@@ -78,7 +78,6 @@ def main():
             object_position = gazebo_model_states.pose[object_index].position
             object_orientation = gazebo_model_states.pose[object_index].orientation
             object_yaw = yaw_of(object_orientation)
-
             # オブジェクトに接近する
             target_pose = Pose()
             target_pose.position.x = object_position.x
@@ -90,6 +89,7 @@ def main():
             target_pose.orientation.z = q[2]
             target_pose.orientation.w = q[3]
             arm.set_pose_target(target_pose)
+            """
             if arm.go() is False:
                 print "Failed to approach an object."
                 continue
@@ -113,14 +113,14 @@ def main():
                 print "Failed to pick up an object."
                 continue
             rospy.sleep(1.0)
-            
+            """  
             #変更↓
             # 設置位置に移動する
             # place_position = random.choice(PLACE_POSITIONS) # 設置位置をランダムに選択する
             target_pose.position.x = TARGET_X
             target_pose.position.y = TARGET_Y
             target_pose.position.z = TARGET_Z
-            q = quaternion_from_euler(0.0, math.pi/2, -math.pi/2)
+            q = quaternion_from_euler(0.0, math.pi, 0.0)
 
             target_pose.orientation.x = q[0]
             target_pose.orientation.y = q[1]

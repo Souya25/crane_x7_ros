@@ -28,7 +28,7 @@
     <link name="unko_3">
       <pose>0.2 0 0 0 0 0</pose>
       <inertial>
-        <mass>1.0</mass>
+        <mass>0.3</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>
@@ -79,7 +79,7 @@
     <link name="unko_2">
       <pose>0.2 0 0.02 0 0 0</pose>
       <inertial>
-        <mass>1.0</mass>
+        <mass>0.03</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>
@@ -125,7 +125,7 @@
     <link name="unko_1">
       <pose>0.2 0 0.035 0 0 0</pose>
       <inertial>
-        <mass>1.0</mass>
+        <mass>0.03</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>

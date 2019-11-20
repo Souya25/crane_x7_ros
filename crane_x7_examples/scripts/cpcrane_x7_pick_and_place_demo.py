@@ -52,6 +52,9 @@ def main():
     target_pose.orientation.w = q[3]
     arm.set_pose_target(target_pose)  # 目標ポーズ設定
     arm.go()  # 実行
+    value = arm.get_current_joint_values()
+    print"prepare value\n"
+    print(value)
 
     # ハンドを開く
     gripper.set_joint_value_target([0.7, 0.7])
@@ -70,6 +73,10 @@ def main():
     arm.set_pose_target(target_pose)  # 目標ポーズ設定
     arm.go()  # 実行
 
+    value = arm.get_current_joint_values()
+    print"grave value\n"
+    print(value)
+    
     # ハンドを閉じる
     gripper.set_joint_value_target([0.4, 0.4])
     gripper.go()
