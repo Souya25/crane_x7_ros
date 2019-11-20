@@ -107,7 +107,7 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=1.0)
+        point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
@@ -138,13 +138,12 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=1.0)
+        point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
-        time.sleep(2.0)
+        time.sleep(2.5)
         print("wait end") 
-        print(point)
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         print(goal)
@@ -158,7 +157,7 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_wrist_joint",]
         
         
-        joint_values = [ 0.45, 1.23, 0.00, -0.88, 0.00, 0.21, 0.00]
+        joint_values = [ 0.99, 1.42, 0.44, -1.25, -1.44, 0.67, 0.00]
        
         position = math.radians(10.0)
         effort  = 1.0
@@ -168,13 +167,12 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=1.0)
+        point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
         time.sleep(0.01)
         print("wait end")  
-        print(point)
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
@@ -189,7 +187,7 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_wrist_joint",]
         
         
-        joint_values = [ 0.90, 0.89,-0.56, -0.74, 0.00, 0.03, 0.00]
+        joint_values = [ 2.15, 1.22, 0.08, -1.45, -1.95, 0.24, 0.00]
        
         position = math.radians(10.0)
         effort  = 1.0
@@ -199,13 +197,12 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=0.8)
+        point.time_from_start = rospy.Duration(secs=0.6)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
         time.sleep(0.01)
         print("wait end")  
-        print(point)
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
@@ -219,7 +216,7 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_wrist_joint",]
         
         
-        joint_values = [ 1.96, 0.91, -1.57, -1.65, -0.85, 0.03, 0.00]
+        joint_values = [ 2.59, 1.14, -1.57, -0.88, -1.15, -0.32, -0.08]
        
         position = math.radians(50.0)
         effort  = 1.0
@@ -229,13 +226,12 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=0.4)
+        point.time_from_start = rospy.Duration(secs=0.2)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
-        time.sleep(0.25)
+        time.sleep(0.05)
         print("wait end")  
-        print(point)
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         
         self._client.wait_for_result(timeout=rospy.Duration(100.0))

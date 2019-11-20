@@ -82,7 +82,7 @@ def main():
     gripper.go()
 
     # 持ち上げる
-    target_pose = geometry_msgs.msg.Pose()
+    """target_pose = geometry_msgs.msg.Pose()
     target_pose.position.x = 0.2
     target_pose.position.y = 0.0
     target_pose.position.z = 0.3
@@ -93,13 +93,19 @@ def main():
     target_pose.orientation.w = q[3]
     arm.set_pose_target(target_pose)  # 目標ポーズ設定
     arm.go()							# 実行
-
+    """
+    arm.set_named_target("vertical")
+    arm.go()
+    gripper.set_joint_value_target([0.7, 0.7])
+    gripper.go()
+    
+    
     # 移動する
     target_pose = geometry_msgs.msg.Pose()
-    target_pose.position.x = 0.2
-    target_pose.position.y = 0.2
+    target_pose.position.x = -0.1
+    target_pose.position.y = -0.2
     target_pose.position.z = 0.3
-    q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
+    q = quaternion_from_euler( 3.14/4, 0.0, 0.0)  # 上方から掴みに行く場合
     target_pose.orientation.x = q[0]
     target_pose.orientation.y = q[1]
     target_pose.orientation.z = q[2]
