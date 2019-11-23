@@ -52,7 +52,7 @@ class GripperClient(object):
         self._goal = GripperCommandGoal()
 
 def main():
-    rospy.init_node("gipper_action_client")
+    rospy.init_node("gripper_action_client")
     gc = GripperClient()
     gc.command()
 """
