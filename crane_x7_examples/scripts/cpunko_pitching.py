@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
+#シミュレータ用(つかむときのグリッパーの角度：23度)
+#実機用(objectがやわらかいから10度)
 
 import rospy
 import time
@@ -8,7 +10,7 @@ from control_msgs.msg import (
     FollowJointTrajectoryAction,
     FollowJointTrajectoryGoal
 )
-from control_msgs.msg import (      #Add 3lines
+from control_msgs.msg import (      
     GripperCommandAction,
     GripperCommandGoal
  )
@@ -16,7 +18,8 @@ from control_msgs.msg import (      #Add 3lines
 from trajectory_msgs.msg import JointTrajectoryPoint
 import math
 import sys
-
+import numpy as np
+import random
 
 class ArmJointTrajectoryExample(object):
     def __init__(self):
@@ -39,9 +42,15 @@ class ArmJointTrajectoryExample(object):
             sys.exit(1)
     
     def go(self, mode):
-        print(mode)
+        #どっち投げかを表示 
+        if mode > 0.5:
+            pitching_mode = "left"
+        else:
+            pitching_mode = "right"
+        print "pitcing_mode:"+pitching_mode
+
                
-        #つかむ準備 
+        #つかむ準備 手先座標( 0.2, 0 0.2)
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
      
@@ -63,14 +72,11 @@ class ArmJointTrajectoryExample(object):
         point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.0)
-        print("wait end")  
 
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         
-        #つかむとき       
+        #つかむとき 手先座標( 0.2, 0, 0.1) 
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
 
@@ -81,7 +87,7 @@ class ArmJointTrajectoryExample(object):
          
         joint_values = [0.1721327091256155, -0.3630645331662308, -0.1862058852524493, -2.3243098124547927, 0.130925888195077, -0.48587059161714485, -1.6908899687220424]
        
-        position = math.radians(10.0)
+        position = math.radians(23.0)
         effort  = 1.0
         self.gripper_goal.command.position = position
         self.gripper_goal.command.max_effort = effort
@@ -92,13 +98,11 @@ class ArmJointTrajectoryExample(object):
         point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
-        print("wait start")  
-        #time.sleep(2.5)
+        
         rospy.sleep(2.5)
-        print("wait end") 
+        
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        print(goal)
         rospy.sleep(1.0)
 
 
@@ -116,12 +120,6 @@ class ArmJointTrajectoryExample(object):
         if mode > 0.5:
             for i in range(4):
                 joint_values[i*2] = joint_values[i*2] * (-1)
-            
-         
-        position = math.radians(10.0)
-        effort  = 1.0
-        self.gripper_goal.command.position = position
-        self.gripper_goal.command.max_effort = effort
                 
         for i, p in enumerate(joint_values):
             point.positions.append(p)
@@ -129,13 +127,8 @@ class ArmJointTrajectoryExample(object):
         point.time_from_start = rospy.Duration(secs=2.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.01)
-        print("wait end")  
-        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        
-        print(goal)
+
 
         #中間点 
         point = JointTrajectoryPoint()
@@ -153,25 +146,15 @@ class ArmJointTrajectoryExample(object):
             for i in range(4):
                 joint_values[i*2] = joint_values[i*2] * (-1)
 
-        position = math.radians(10.0)
-        effort  = 1.0
-        self.gripper_goal.command.position = position
-        self.gripper_goal.command.max_effort = effort
-                
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
         point.time_from_start = rospy.Duration(secs=0.6)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.01)
-        print("wait end")  
-        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        print(goal)
        
-        #ラスト
+        #なげるとき
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
 
@@ -197,12 +180,11 @@ class ArmJointTrajectoryExample(object):
         point.time_from_start = rospy.Duration(secs=0.2)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.05)
-        print("wait end")  
+        
+        rospy.sleep(0.05)#何秒後にグリッパーを開くか
+        
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        print(goal)
         
         return self._client.get_result()
 
@@ -212,6 +194,6 @@ class ArmJointTrajectoryExample(object):
 if __name__ == "__main__":
     rospy.init_node("arm_joint_trajectory_example")
     arm_joint_trajectory_example = ArmJointTrajectoryExample()
-    mode = 1 #1 == left
+    mode = np.random.rand(1) #モードを乱数で決める
     result = arm_joint_trajectory_example.go(mode)
     print(result)
