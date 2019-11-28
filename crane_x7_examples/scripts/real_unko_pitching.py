@@ -194,6 +194,16 @@ class ArmJointTrajectoryExample(object):
 if __name__ == "__main__":
     rospy.init_node("arm_joint_trajectory_example")
     arm_joint_trajectory_example = ArmJointTrajectoryExample()
-    mode = np.random.rand(1) #モードを乱数で決める
+    
+    
+    while 1 :
+        mode = input("右投げの場合 0, 左投げの場合 1を入力\n pitching_mode: ")
+        if mode == 0 or mode == 1 :
+            break
+        else :
+            print("Error\n")
+    
+    #mode = np.random.rand(1) #モードを乱数で決める
+    
     result = arm_joint_trajectory_example.go(mode)
     print(result)
