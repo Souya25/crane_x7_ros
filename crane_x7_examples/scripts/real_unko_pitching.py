@@ -14,12 +14,10 @@ from control_msgs.msg import (
     GripperCommandAction,
     GripperCommandGoal
  )
-
 from trajectory_msgs.msg import JointTrajectoryPoint
 import math
 import sys
 import numpy as np
-import random
 
 class ArmJointTrajectoryExample(object):
     def __init__(self):
@@ -30,7 +28,6 @@ class ArmJointTrajectoryExample(object):
             rospy.logerr("Action Server Not Found")
             rospy.signal_shutdown("Action Server Not Found")
             sys.exit(1)
-
 
         self.gripper_client = actionlib.SimpleActionClient("/crane_x7/gripper_controller/gripper_cmd",GripperCommandAction)
         self.gripper_goal = GripperCommandGoal()
@@ -47,9 +44,8 @@ class ArmJointTrajectoryExample(object):
             pitching_mode = "left"
         else:
             pitching_mode = "right"
-        print "pitcing_mode:"+pitching_mode
+        print "pitching_mode:"+pitching_mode
 
-               
         #つかむ準備 手先座標( 0.2, 0 0.2)
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
@@ -105,7 +101,6 @@ class ArmJointTrajectoryExample(object):
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         rospy.sleep(1.0)
 
-
         #投げる準備 
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
@@ -117,7 +112,7 @@ class ArmJointTrajectoryExample(object):
         
         joint_values = [ 0.99, 1.42, 0.44, -1.25, -1.44, 0.67, 0.00]
         
-        if mode > 0.5:
+        if mode == 1:
             for i in range(4):
                 joint_values[i*2] = joint_values[i*2] * (-1)
                 
@@ -129,7 +124,6 @@ class ArmJointTrajectoryExample(object):
         self._client.send_goal(goal)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
 
-
         #中間点 
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
@@ -139,10 +133,9 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
                                        "crane_x7_wrist_joint",]
         
-        
         joint_values = [ 2.15, 1.22, 0.08, -1.45, -1.95, 0.24, 0.00]
 
-        if mode > 0.5:
+        if mode == 1:
             for i in range(4):
                 joint_values[i*2] = joint_values[i*2] * (-1)
 
@@ -165,7 +158,7 @@ class ArmJointTrajectoryExample(object):
         
         joint_values = [ 2.59, 1.14, -1.57, -0.88, -1.15, -0.32, -0.08]
        
-        if mode > 0.5:
+        if mode == 1:
             for i in range(4):
                 joint_values[i*2] = joint_values[i*2] * (-1)
         
@@ -186,15 +179,12 @@ class ArmJointTrajectoryExample(object):
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         
-        return self._client.get_result()
-
     def feedback(self,msg):
         print("feedback callback")
 
 if __name__ == "__main__":
     rospy.init_node("arm_joint_trajectory_example")
     arm_joint_trajectory_example = ArmJointTrajectoryExample()
-    
     
     while 1 :
         mode = input("右投げの場合 0, 左投げの場合 1を入力\n pitching_mode: ")
@@ -203,7 +193,4 @@ if __name__ == "__main__":
         else :
             print("Error\n")
     
-    #mode = np.random.rand(1) #モードを乱数で決める
-    
-    result = arm_joint_trajectory_example.go(mode)
-    print(result)
+    arm_joint_trajectory_example.go(mode)
