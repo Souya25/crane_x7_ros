@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-#シミュレータ用(つかむときのグリッパーの角度：23度)
+#シミュレータ用(つかむときのグリッパーの角度：23.5度)
 #実機用(objectがやわらかいから10度)
 
 import rospy
@@ -47,9 +47,8 @@ class ArmJointTrajectoryExample(object):
             pitching_mode = "left"
         else:
             pitching_mode = "right"
-        print "pitcing_mode:"+pitching_mode
+        print "pitching_mode:"+pitching_mode
 
-               
         #つかむ準備 手先座標( 0.2, 0 0.2)
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
@@ -87,7 +86,7 @@ class ArmJointTrajectoryExample(object):
          
         joint_values = [0.1721327091256155, -0.3630645331662308, -0.1862058852524493, -2.3243098124547927, 0.130925888195077, -0.48587059161714485, -1.6908899687220424]
        
-        position = math.radians(23.0)
+        position = math.radians(23.5) #つかむときのgripperの角度(実機:10.0, シミュレータ:23.5)
         effort  = 1.0
         self.gripper_goal.command.position = position
         self.gripper_goal.command.max_effort = effort
@@ -186,7 +185,6 @@ class ArmJointTrajectoryExample(object):
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         
-        return self._client.get_result()
 
     def feedback(self,msg):
         print("feedback callback")
@@ -195,5 +193,5 @@ if __name__ == "__main__":
     rospy.init_node("arm_joint_trajectory_example")
     arm_joint_trajectory_example = ArmJointTrajectoryExample()
     mode = np.random.rand(1) #モードを乱数で決める
-    result = arm_joint_trajectory_example.go(mode)
-    print(result)
+    arm_joint_trajectory_example.go(mode)
+               
