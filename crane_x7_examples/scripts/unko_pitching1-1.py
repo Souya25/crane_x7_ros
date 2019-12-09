@@ -1,4 +1,3 @@
-Learn more or give us feedback
 #!/usr/bin/env python
 # coding: utf-8
 #実機用(掴む時のグリッパーの角度:10度)→ objectが柔らかい為
