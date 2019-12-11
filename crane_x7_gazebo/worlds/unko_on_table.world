@@ -28,7 +28,7 @@
     <link name="unko_3">
       <pose>0.2 0 0 0 0 0</pose>
       <inertial>
-        <mass>0.3</mass>
+        <mass>0.03</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>
@@ -47,6 +47,12 @@
         </geometry>
       </collision>
       <visual name="visual">
+        <material>
+          <diffuse>1.0 1.0 0.1 1</diffuse>
+          <ambient>1.0 1.0 0.1 1</ambient>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
         <geometry>
           <cylinder>
 		  <radius>0.03</radius>
@@ -72,14 +78,11 @@
 
 
 
- <!-- <model name="unko2">
-    <pose>0.2 0 1.09 0 0 0</pose>
--->
  
     <link name="unko_2">
       <pose>0.2 0 0.02 0 0 0</pose>
       <inertial>
-        <mass>0.03</mass>
+        <mass>0.01</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>
@@ -98,6 +101,12 @@
         </geometry>
       </collision>
       <visual name="visual">
+        <material>
+          <diffuse>1.0 1.0 0.1 1</diffuse>
+          <ambient>1.0 1.0 0.1 1</ambient>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material> 
         <geometry>
           <cylinder>
 		  <radius>0.025</radius>
@@ -125,7 +134,7 @@
     <link name="unko_1">
       <pose>0.2 0 0.035 0 0 0</pose>
       <inertial>
-        <mass>0.03</mass>
+        <mass>0.01</mass>
         <inertia>
           <ixx>1e-4</ixx>
           <ixy>0.0</ixy>
@@ -144,6 +153,12 @@
         </geometry>
       </collision>
       <visual name="visual">
+        <material>
+          <diffuse>1.0 1.0 0.1 1</diffuse>
+          <ambient>1.0 1.0 0.1 1</ambient>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material> 
         <geometry>
           <cylinder>
 		  <radius>0.015</radius>
