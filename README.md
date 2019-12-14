@@ -2,10 +2,15 @@
 memo
 ---
 gazebo 起動
+
 roslaunch cranex7_gazebo crane_x7_with_unko_on_table.launch
+
 camera をみる
+
 rosrun image_view image_view image:=/camera/image_raw
+
 depth camera をみる
+
 rosrun image_view image_view image:=/camera/depth_registered/image_raw
 
 ---
