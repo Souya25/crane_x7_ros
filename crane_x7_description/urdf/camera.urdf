@@ -60,10 +60,14 @@
                 </clip>
             </camera>
  
-            <plugin name="real_link_controller" filename="libgazebo_ro    s_openni_kinect.so">
+            <plugin name="real_link_controller" filename="libgazebo_ros_openni_kinect.so">
                 <alwaysOn>true</alwaysOn>
                 <updateRate>1.0</updateRate>
                 <cameraName>camera</cameraName>
+                
+                <imageTopicName>image_raw</imageTopicName>
+                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+
                 <depthImageTopicName>/camera/depth_registered/image_raw</depthImageTopicName>
                 <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
                 <pointCloudTopicName>/camera/depth_registered/points</pointCloudTopicName>
