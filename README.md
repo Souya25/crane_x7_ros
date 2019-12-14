@@ -1,15 +1,15 @@
 # crane_x7_ros
 memo
 ---
--gazebo 起動
+- gazebo 起動
 ```bash
 roslaunch cranex7_gazebo crane_x7_with_unko_on_table.launch
 ```
--camera をみる
+- camera をみる
 ```bash
 rosrun image_view image_view image:=/camera/image_raw
 ```
--depth camera をみる
+- depth camera をみる
 ```bash
 rosrun image_view image_view image:=/camera/depth_registered/image_raw
 ```
