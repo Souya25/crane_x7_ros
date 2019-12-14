@@ -1,5 +1,14 @@
 # crane_x7_ros
+memo
+---
+gazebo 起動
+roslaunch cranex7_gazebo crane_x7_with_unko_on_table.launch
+camera をみる
+rosrun image_view image_view image:=/camera/image_raw
+depth camera をみる
+rosrun image_view image_view image:=/camera/depth_registered/image_raw
 
+---
 [![Build Status](https://travis-ci.org/rt-net/crane_x7_ros.svg?branch=master)](https://travis-ci.org/rt-net/crane_x7_ros)
 
 ![crane_x7_gazebo](https://github.com/rt-net/crane_x7_ros/blob/images/images/crane_x7_gazebo.png "crane_x7_gazebo")
