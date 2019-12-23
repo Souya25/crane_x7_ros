@@ -23,6 +23,7 @@
   <run_depend>crane_x7_moveit_config</run_depend>
   <run_depend>crane_x7_msgs</run_depend>
   <run_depend>crane_x7_gazebo</run_depend>
+  <run_depend>crane_x7_robot_design3</run_depend>
 
   <export>
     <metapackage/>

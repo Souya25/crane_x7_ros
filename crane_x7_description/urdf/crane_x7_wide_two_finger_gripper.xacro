@@ -141,17 +141,17 @@
     </gazebo>
 
     <gazebo reference="${name}_base_link">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${name}_finger_a_link">
       <mu1>0.8</mu1>
       <mu2>0.8</mu2>
-      <material>Gazebo/Red</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${name}_finger_b_link">
       <mu1>0.8</mu1>
       <mu2>0.8</mu2>
-      <material>Gazebo/Red</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
 
   </xacro:macro>

@@ -538,37 +538,37 @@
     </gazebo>
 
     <gazebo reference="${NAME_LINK_BASE}">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_1}">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_2}">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_3}">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_4}">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_5}">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Blue</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_6}">
       <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_COVER_2_L}">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_COVER_2_R}">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_COVER_4_L}">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="${NAME_LINK_COVER_4_R}">
-      <material>Gazebo/Red</material>
+      <material>Gazebo/White</material>
     </gazebo>
 
   </xacro:macro>
