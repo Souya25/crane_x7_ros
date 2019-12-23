@@ -48,7 +48,7 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
                                        "crane_x7_wrist_joint",]
       
-        joint_values = [0, 0, 0, -1.570795, 0, -1.570795, 0]
+        joint_values = [0, 0, 0, -1.570795, 0, -1.570795, 1.570795]
        
         position = math.radians(45.0)
         effort  = 1.0
