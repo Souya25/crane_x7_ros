@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-#シミュレータ用(つかむときのグリッパーの角度：23.5度)
-#実機用(objectがやわらかいから10度)
+#searching pose
 
 import rospy
 import time
@@ -48,8 +47,8 @@ class ArmJointTrajectoryExample(object):
                                        "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
                                        "crane_x7_wrist_joint",]
       
-        joint_values = [0, 0, 0, -1.570795, 0, -1.570795, 1.570795]
-       
+        joint_values = [0, 0, 0, -1.57, 0, -1.57, 1.57]
+        print(joint_values) 
         position = math.radians(45.0)
         effort  = 1.0
         self.gripper_goal.command.position = position
@@ -58,12 +57,14 @@ class ArmJointTrajectoryExample(object):
         for i, p in enumerate(joint_values):
             point.positions.append(p)
         
-        point.time_from_start = rospy.Duration(secs=2.0)
+        point.time_from_start = rospy.Duration(secs=3.0)
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
 
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
+        
+ 
         
     def feedback(self,msg):
         print("feedback callback")

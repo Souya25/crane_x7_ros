@@ -8,19 +8,19 @@ using namespace::cv;
 std::string msg = "0";
 std::string msg_1 = "0"; 
 class depth_estimater{
-public:
+public:          //変数をpublicで宣言
     depth_estimater();
     ~depth_estimater();
     void rgbImageCallback(const sensor_msgs::ImageConstPtr& msg);
     void depthImageCallback(const sensor_msgs::ImageConstPtr& msg);
    
  
-private:
+private:     //hensuu wo private de sengen
     ros::NodeHandle nh;
     ros::Subscriber sub_rgb, sub_depth;
     ros::Publisher pub = nh.advertise<std_msgs::String>("bool",100);
 };
-cv::Mat img_1;
+cv::Mat img_1;  //int x; mitai na mono //gazou wo kakunou suru hennsuu no sengen 
 depth_estimater::depth_estimater(){
     //sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/color/image_raw", 1, &depth_estimater::rgbImageCallback, this);
     sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/image_raw", 1, &depth_estimater::rgbImageCallback, this);
@@ -56,8 +56,41 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     // inRangeを用いてフィルタリング
 	inRange(hsv_img, lower, upper, mask_image);
     int count = 0;
-	// マスクを基に入力画像をフィルタリング
-	cv_ptr->image.copyTo(output_image, mask_image);
+	
+    
+    // 輪郭を格納するcontoursにfindContours関数に渡すと輪郭を点の集合として入れてくれる
+    std::vector<std::vector<cv::Point>> contours;
+    cv::findContours(mask_image, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);    // 輪郭線を格納
+
+
+    double max_area=0;
+    
+    int max_area_contour=-1;
+    try{
+        // 各輪郭をcontourArea関数に渡し、最大面積を持つ輪郭を探す
+        for(int j=0; j<contours.size(); j++){
+            double area = cv::contourArea(contours.at(j)); //menseki keisan
+            if(max_area<area){
+                max_area=area;
+                max_area_contour=j;
+            }
+        }
+    }catch(CvErrorCallback){
+        
+    }
+    count = contours.at(max_area_contour).size();
+    double gx = 0, gy = 0;
+    for(int k = 0; k < count; k++){
+        gx += contours.at(max_area_contour).at(k).x;
+        gy += contours.at(max_area_contour).at(k).y;
+    }
+    gx/=count;
+    gy/=count;
+
+    
+   /* 
+    // マスクを基に入力画像をフィルタリング
+    cv_ptr->image.copyTo(output_image, mask_image);
 	for( y = 0;y < 480;y++){
         for( x = 0; x < 640; x++){
             px_1 = static_cast<int>(output_image.at<unsigned char>(y, x));  
@@ -76,6 +109,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
         //std::cout << x_mem << "," << y_mem << std::endl;
         flag = 0;
     }
+    */
     cv::imshow("RGB image", output_image);
     if(count > 3000){
         std::string msg = "1";
@@ -84,6 +118,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     }
 
     cv::waitKey(10);
+    printf("x = %lf, y = %lf\n", gx, gy);
 }
 int main(int argc, char **argv){
     ros::init(argc, argv, "depth_estimater");

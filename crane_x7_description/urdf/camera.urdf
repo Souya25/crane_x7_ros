@@ -70,7 +70,7 @@
                     <height>720</height>
                 </image>
                 <clip>
-                    <near>0.2</near>
+                    <near>0.1</near>
                     <far>10.0</far>
                 </clip>
             </camera>
@@ -85,6 +85,7 @@
 
                 <depthImageTopicName>/camera/depth_registered/image_raw</depthImageTopicName>
                 <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+                
                 <pointCloudTopicName>/camera/depth_registered/points</pointCloudTopicName>
                 <frameName>real_depth_frame</frameName>
                 <pointCloudCutoff>0.5</pointCloudCutoff>
@@ -95,7 +96,7 @@
                 <distortionT2>0.00000001</distortionT2>
             </plugin>
         </sensor>
-        <material value="Gazebo/Blue" />    
+        <material value="Gazebo/Black" />    
     </gazebo>
 
 </robot>
