@@ -2,11 +2,11 @@
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
-#include <std_msgs/String.h>
+//#include <std_msgs/String.h>
 
 using namespace::cv;
-std::string msg = "0";
-std::string msg_1 = "0"; 
+//std::string msg = "0";
+//std::string msg_1 = "0"; 
 class depth_estimater{
 public:          //変数をpublicで宣言
     depth_estimater();
@@ -18,7 +18,7 @@ public:          //変数をpublicで宣言
 private:     //hensuu wo private de sengen
     ros::NodeHandle nh;
     ros::Subscriber sub_rgb, sub_depth;
-    ros::Publisher pub = nh.advertise<std_msgs::String>("bool",100);
+  //  ros::Publisher pub = nh.advertise<std_msgs::String>("bool",100);
 };
 cv::Mat img_1;  //int x; mitai na mono //gazou wo kakunou suru hennsuu no sengen 
 depth_estimater::depth_estimater(){
@@ -112,9 +112,9 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     */
     cv::imshow("RGB image", output_image);
     if(count > 3000){
-        std::string msg = "1";
-        pub.publish(msg);
-        msg = "0";
+     //   std::string msg = "1";
+    //  pub.publish(msg);
+     //   msg = "0";
     }
 
     cv::waitKey(10);
