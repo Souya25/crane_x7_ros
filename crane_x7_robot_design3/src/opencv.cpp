@@ -3,6 +3,7 @@
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
 //#include <std_msgs/String.h>
+#include <vector>
 
 using namespace::cv;
 //std::string msg = "0";
@@ -22,8 +23,8 @@ private:     //hensuu wo private de sengen
 };
 cv::Mat img_1;  //int x; mitai na mono //gazou wo kakunou suru hennsuu no sengen 
 depth_estimater::depth_estimater(){
-    //sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/color/image_raw", 1, &depth_estimater::rgbImageCallback, this);
-    sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/image_raw", 1, &depth_estimater::rgbImageCallback, this);
+    sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/color/image_raw", 1, &depth_estimater::rgbImageCallback, this);
+    //sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/image_raw", 1, &depth_estimater::rgbImageCallback, this);
 }
  
 depth_estimater::~depth_estimater(){
@@ -59,7 +60,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
 	
     
     // 輪郭を格納するcontoursにfindContours関数に渡すと輪郭を点の集合として入れてくれる
-    std::vector<std::vector<cv::Point>> contours;
+    std::vector<std::vector<cv::Point> > contours;
     cv::findContours(mask_image, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);    // 輪郭線を格納
 
 
@@ -78,17 +79,17 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     }catch(CvErrorCallback){
         
     }
-    count = contours.at(max_area_contour).size();
+    int counts = contours.at(max_area_contour).size();
     double gx = 0, gy = 0;
-    for(int k = 0; k < count; k++){
+    for(int k = 0; k < counts; k++){
         gx += contours.at(max_area_contour).at(k).x;
         gy += contours.at(max_area_contour).at(k).y;
     }
-    gx/=count;
-    gy/=count;
-
+    gx/=counts;
+    gy/=counts;
+    printf("counts %d", counts);
+    printf("x = %lf, y = %lf\n", gx, gy); 
     
-   /* 
     // マスクを基に入力画像をフィルタリング
     cv_ptr->image.copyTo(output_image, mask_image);
 	for( y = 0;y < 480;y++){
@@ -109,7 +110,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
         //std::cout << x_mem << "," << y_mem << std::endl;
         flag = 0;
     }
-    */
+    
     cv::imshow("RGB image", output_image);
     if(count > 3000){
      //   std::string msg = "1";
@@ -118,7 +119,6 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     }
 
     cv::waitKey(10);
-    printf("x = %lf, y = %lf\n", gx, gy);
 }
 int main(int argc, char **argv){
     ros::init(argc, argv, "depth_estimater");
