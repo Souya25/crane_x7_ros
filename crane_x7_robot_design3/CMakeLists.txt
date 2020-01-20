@@ -44,4 +44,3 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLDUE_DIRS})
 
 add_executable(cam src/opencv.cpp)
 target_link_libraries(cam ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-

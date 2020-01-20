@@ -26,6 +26,12 @@
         </inertial>
     </link>
     
+    <joint name="real_base_joint" type="fixed">
+        <origin xyz="0 0.05 0" rpy="0 -1.570795 -1.570795"/>
+        <parent link="crane_x7_gripper_base_link"/>
+        <child link="real_link_optical_frame"/>
+    </joint>
+ 
     <joint name="real_joint" type="fixed">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <parent link="real_link_optical_frame"/>
@@ -37,12 +43,6 @@
         <parent link="real_link_optical_frame" />
         <child link="real_depth_frame" />
     </joint>
-    <joint name="real_base_joint" type="fixed">
-        <origin xyz="0 0.05 0" rpy="0 -1.570795 -1.570795"/>
-        <parent link="crane_x7_gripper_base_link"/>
-        <child link="real_link_optical_frame"/>
-    </joint>
-     
     
     
     <!--
@@ -70,8 +70,8 @@
                     <height>720</height>
                 </image>
                 <clip>
-                    <near>0.1</near>
-                    <far>10.0</far>
+                    <near>0.01</near>
+                    <far>1.0</far>
                 </clip>
             </camera>
  
