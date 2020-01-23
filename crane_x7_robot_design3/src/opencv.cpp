@@ -81,7 +81,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     }catch(CvErrorCallback){
         
     }
-    if(max_area_contour != -1 && bunbo < 100){
+    if(max_area_contour != -1){
         int counts = contours.at(max_area_contour).size();
         double gx = 0, gy = 0;
     
@@ -95,8 +95,12 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
         bunbo++;
         sumx += gx;
         sumy += gy;
+        ms.x = -320 + (sumx/bunbo);
+        ms.y = -240 + (sumy/bunbo);
+        pub.publish(ms);
     }
-    if(bunbo == 100){
+    /*
+    if(bunbo > 99){
         printf("answer\n x = %lf, y = %lf\n", sumx/bunbo ,sumy/bunbo);
         ms.x = sumx/bunbo;
         ms.y = sumy/bunbo;
@@ -104,6 +108,7 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
         pub.publish(ms);
         //exit(1); 
     }
+    */
     // マスクを基に入力画像をフィルタリング
     cv_ptr->image.copyTo(output_image, mask_image);
 	for( y = 0;y < 480;y++){

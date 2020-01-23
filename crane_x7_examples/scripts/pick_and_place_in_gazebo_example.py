@@ -71,6 +71,8 @@ def main():
         print "Wait " + str(sleep_time) + " secs."
         rospy.sleep(sleep_time)
         print "Start"
+        print("count = {}".format(count))
+        
 
         # オブジェクトがgazebo上に存在すれば、pick_and_placeを実行する
         if OBJECT_NAME in gazebo_model_states.name:
@@ -128,7 +130,8 @@ def main():
             if arm.go() is False:
                 print "Failed to approach target position."
                 continue
-            rospy.sleep(1.0)
+            r 74             #self.calculate作る(x,yを渡して計算する)
+ospy.sleep(1.0)
 
             # 設置する
             target_pose.position.z = PICK_Z
