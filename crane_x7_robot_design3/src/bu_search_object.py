@@ -57,25 +57,32 @@ class ArmJointTrajectoryExample(object):
     z = 0
            
     def callback(self, ms):
+        print("x座標 = {}".format(ms.x))
+        print("y座標 = {}".format(ms.y))
+        print("----------")
         global count
         if count == 0:
             rospy.sleep(2.0)
-        if ms.theta == 1:
-            
-            if count < 200:
-                global sum_x
-                sum_x += ms.x #軸変換(センサのy軸をマニピュレータのx軸に合わせる)
-                global sum_y
-                sum_y += ms.y #軸変換(センサのx軸をマニピュレータのy軸に合わせる)
-                count += 1
-            else:
-                print("ave_x :{}".format(sum_x/count))
-                print("ave_y :{}".format(sum_y/count))
-                self.calculate(sum_x/count,sum_y/count) #平均取ったものをself.calculateを送る
-         
-            print("count = {}".format(count))
+           
+        if count < 200:
+            global sum_x
+            sum_x += ms.x #軸変換(センサのy軸をマニピュレータのx軸に合わせる)
+            global sum_y
+            sum_y += ms.y #軸変換(センサのx軸をマニピュレータのy軸に合わせる)
+            count += 1
+            #print("ave_x :{}".format(sum_x/count))
+            #print("ave_y :{}".format(sum_y/count))
         else:
-            self.search()
+            print("ave_x :{}".format(sum_x/count))
+            print("ave_y :{}".format(sum_y/count))
+            self.calculate(sum_x/count,sum_y/count) #平均取ったものをself.calculateを送る
+         
+        #print("x座標 = {}".format(sum_x/count))
+        #print("y座標 = {}".format(sum_y/count))
+        print("count = {}".format(count))
+        #print("x合計 = {}".format(sum_x))
+        #print("y合計 = {}".format(sum_y))
+        #print("----------")
        
     def calculate( self, ave_x, ave_y):
         
@@ -89,8 +96,8 @@ class ArmJointTrajectoryExample(object):
         print("calculated\n res_x:{}".format(res_x))
         print("res_y:{}".format(res_y))
 
-        self.pick( res_x, res_y)
-                      
+        self.pick( res_x, res_y)              
+        
     def search(self):
         robot = moveit_commander.RobotCommander()
         arm = moveit_commander.MoveGroupCommander("arm")
@@ -123,20 +130,34 @@ class ArmJointTrajectoryExample(object):
         gripper.go()
           
         target_pose = geometry_msgs.msg.Pose()
-        
-        #つかむ前の姿勢
+        '''
+        search_x = 0.176188627578
+        search_y = -0.0182615322152
+        search_z = 0.265958239801
+        '''
+
         search_x = 0.2
         search_y = 0
         search_z = 0.3
+        
         global x
         x = search_x 
+
         global y
         y = search_y
+
         global z
         z = search_z 
         target_pose.position.x = search_x
         target_pose.position.y = search_y
         target_pose.position.z = search_z
+        '''
+        #掴む準備をする
+        target_pose.orientation.x = -0.681381429346
+        target_pose.orientation.y = -0.723920789866
+        target_pose.orientation.z = 0.0649737640923
+        target_pose.orientation.w = 0.0862348405328
+        '''
         q = quaternion_from_euler(-3.14, 0, 3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
         target_pose.orientation.y = q[1]
@@ -163,16 +184,19 @@ class ArmJointTrajectoryExample(object):
         
         target_pose = geometry_msgs.msg.Pose()
         
-        offset_x = 0.05            #カメラと手先のオフセット
+        offset_x = 0.05              #カメラと手先のオフセット
         offset_y = 0.03            #カメラと手先のオフセット
         
-        tar_x = res_y + x                         #センサの位置にあった原点をマニピュレータの根元へ移動
+        print("x: {}".format(x))
+        print("y: {}".format(y))
+        #tar_x = res_y + x    #センサの位置にあった原点をマニピュレータの根元へ移動
+        tar_x = res_y + x    #センサの位置にあった原点をマニピュレータの根元へ移動
         tar_y = -res_x + y + offset_y             #センサの位置にあった原点をマニピュレータの根元へ移動
-        
-        #つかむ前の位置、姿勢 
+        print("tar_x: {}".format(tar_x))
+        print("tar_y: {}".format(tar_y))
         target_pose.position.x = tar_x
         target_pose.position.y = tar_y
-        target_pose.position.z = 0.15
+        target_pose.position.z = 0.12
         q = quaternion_from_euler(math.pi, 0.0, math.pi/2.0)
         target_pose.orientation.x = q[0]
         target_pose.orientation.y = q[1]
@@ -180,127 +204,39 @@ class ArmJointTrajectoryExample(object):
         target_pose.orientation.w = q[3]
         arm.set_pose_target(target_pose)
         arm.go() 
-       
-        #つかむ位置、姿勢
-        target_pose.position.z = 0.11
-        arm.set_pose_target(target_pose)
-        arm.go() 
 
         #ハンドを閉じる
-        gripper.set_joint_value_target([0.2,0.2])
+        gripper.set_joint_value_target([0.4,0.4])
         gripper.go()
-       
-        #homeへ 
-        arm.set_named_target("home")
-        arm.go()
-        mode = 1
-        self.go(mode)
-
-    def go(self, mode):
         
-        #投げる準備 
+    def go(self):
+        #search position
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
-
+     
         goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint", "crane_x7_shoulder_revolute_part_tilt_joint",
                                        "crane_x7_upper_arm_revolute_part_twist_joint", "crane_x7_upper_arm_revolute_part_rotate_joint",
                                        "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
                                        "crane_x7_wrist_joint",]
+      
+        joint_values = [0, 0, 0, -1.57, 0, -1.57, 1.57]
+        print(joint_values) 
+        position = math.radians(45.0)
+        effort  = 1.0
+        self.gripper_goal.command.position = position
+        self.gripper_goal.command.max_effort = effort
+                
+        for i, p in enumerate(joint_values):
+            point.positions.append(p)
         
-        joint_values = [ 0.99, 1.42, 0.44, -1.25, -1.44, 0.67, 0.00]
-        
-        if mode > 0.5:
-            for i in range(4):
-                joint_values[i*2] = joint_values[i*2] * (-1)
-            
+        point.time_from_start = rospy.Duration(secs=3.0)
+        goal.trajectory.points.append(point)
+        self._client.send_goal(goal)
+
+        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
+        self._client.wait_for_result(timeout=rospy.Duration(100.0))
+
          
-        position = math.radians(10.0)
-        effort  = 1.0
-        self.gripper_goal.command.position = position
-        self.gripper_goal.command.max_effort = effort
-                
-        for i, p in enumerate(joint_values):
-            point.positions.append(p)
-        
-        point.time_from_start = rospy.Duration(secs=2.0)
-        goal.trajectory.points.append(point)
-        self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.01)
-        print("wait end")  
-        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
-        self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        
-        print(goal)
-
-        #中間点 
-        point = JointTrajectoryPoint()
-        goal = FollowJointTrajectoryGoal()
-
-        goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint", "crane_x7_shoulder_revolute_part_tilt_joint",
-                                       "crane_x7_upper_arm_revolute_part_twist_joint", "crane_x7_upper_arm_revolute_part_rotate_joint",
-                                       "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
-                                       "crane_x7_wrist_joint",]
-        
-        
-        joint_values = [ 2.15, 1.22, 0.08, -1.45, -1.95, 0.24, 0.00]
-
-        if mode > 0.5:
-            for i in range(4):
-                joint_values[i*2] = joint_values[i*2] * (-1)
-
-        position = math.radians(10.0)
-        effort  = 1.0
-        self.gripper_goal.command.position = position
-        self.gripper_goal.command.max_effort = effort
-                
-        for i, p in enumerate(joint_values):
-            point.positions.append(p)
-        
-        point.time_from_start = rospy.Duration(secs=1.0)
-        goal.trajectory.points.append(point)
-        self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.01)
-        print("wait end")  
-        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
-        self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        print(goal)
-       
-        #ラスト
-        point = JointTrajectoryPoint()
-        goal = FollowJointTrajectoryGoal()
-
-        goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint", "crane_x7_shoulder_revolute_part_tilt_joint",
-                                       "crane_x7_upper_arm_revolute_part_twist_joint", "crane_x7_upper_arm_revolute_part_rotate_joint",
-                                       "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
-                                       "crane_x7_wrist_joint",]
-        
-        joint_values = [ 2.59, 1.14, -1.57, -0.88, -1.15, -0.32, -0.08]
-       
-        if mode > 0.5:
-            for i in range(4):
-                joint_values[i*2] = joint_values[i*2] * (-1)
-        
-        position = math.radians(50.0)
-        effort  = 1.0
-        self.gripper_goal.command.position = position
-        self.gripper_goal.command.max_effort = effort
-                
-        for i, p in enumerate(joint_values):
-            point.positions.append(p)
-         
-        point.time_from_start = rospy.Duration(secs=1) #moto 0.2
-        goal.trajectory.points.append(point)
-        self._client.send_goal(goal)
-        print("wait start")  
-        time.sleep(0.05)
-        print("wait end")  
-        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
-        self._client.wait_for_result(timeout=rospy.Duration(100.0))
-        print(goal)
-
-        
     def feedback(self,msg):
         print("feedback callback")
 

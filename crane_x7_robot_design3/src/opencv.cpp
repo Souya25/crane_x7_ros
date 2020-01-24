@@ -25,7 +25,9 @@ private:     //hensuu wo private de sengen
 };
 cv::Mat img_1;  //int x; mitai na mono //gazou wo kakunou suru hennsuu no sengen 
 depth_estimater::depth_estimater(){
+    //RealSense
     sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/color/image_raw", 1, &depth_estimater::rgbImageCallback, this);
+	//シミュレータ上のカメラ
     //sub_rgb = nh.subscribe<sensor_msgs::Image>("/camera/image_raw", 1, &depth_estimater::rgbImageCallback, this);
 }
  
@@ -48,8 +50,8 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     
     //Scalar lower = cv::Scalar(160,50,50);
     //Scalar upper = cv::Scalar(180,255,255);    
-    Scalar lower = cv::Scalar( 0, 200,  200); //フィルタリングする色の範囲
-    Scalar upper = cv::Scalar( 50, 255, 255);
+    Scalar lower = cv::Scalar( 0, 120,  120); //フィルタリングする色の範囲
+    Scalar upper = cv::Scalar( 80, 255, 255);
 
 
 	// BGRからHSVへ変換
@@ -83,32 +85,26 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     }
     if(max_area_contour != -1){
         int counts = contours.at(max_area_contour).size();
-        double gx = 0, gy = 0;
+        double gx = 0, gy = 0;    //gx,gyはオブジェクトの重心の座標
     
         for(int k = 0; k < counts; k++){
             gx += contours.at(max_area_contour).at(k).x;
             gy += contours.at(max_area_contour).at(k).y;
         }
-        gx/=counts;
+         
+        gx/=counts;  
         gy/=counts;
-        printf("x = %lf, y = %lf\n", gx, gy);
-        bunbo++;
-        sumx += gx;
-        sumy += gy;
-        ms.x = -320 + (sumx/bunbo);
-        ms.y = -240 + (sumy/bunbo);
+        ms.x = -320 + gx;    //ms.xは中心を(0,0)としたときのxの値 (画像の右方向をx軸の正とする)
+        ms.y = 240 - gy;    //ms.yは中心を(0,0)としたときのyの値 (画像の上方向をy軸の正とする)
+        printf("x = %lf, y = %lf\n", ms.x, ms.y);
+        ms.theta = 1;
+        pub.publish(ms);
+    }else{
+        ms.theta = 0;
         pub.publish(ms);
     }
-    /*
-    if(bunbo > 99){
-        printf("answer\n x = %lf, y = %lf\n", sumx/bunbo ,sumy/bunbo);
-        ms.x = sumx/bunbo;
-        ms.y = sumy/bunbo;
-        bunbo++;
-        pub.publish(ms);
-        //exit(1); 
-    }
-    */
+
+
     // マスクを基に入力画像をフィルタリング
     cv_ptr->image.copyTo(output_image, mask_image);
 	for( y = 0;y < 480;y++){
@@ -135,7 +131,7 @@ int main(int argc, char **argv){
     sleep(2.0);
     ros::init(argc, argv, "depth_estimater");
     depth_estimater depth_estimater;
-    printf("hello");
     ros::spin();
     return 0;
 }
+
