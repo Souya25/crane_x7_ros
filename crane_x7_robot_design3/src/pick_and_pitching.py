@@ -88,20 +88,7 @@ class ArmJointTrajectoryExample(object):
             #self.search(self.search_num)
             self.mode = ms.theta
         print("count = {}".format(self.count))
-        """ 
-    def calculate( self, ave_x, ave_y):
-        
-        print("ave_x:{}".format(ave_x))
-        print("ave_y:{}".format(ave_y))
-        rad_y = 18  
-        rad_x = rad_y * 1.33
-        res_x = self.z * math.tan(math.radians(rad_x)) * ave_x / 320  #座標変換(画像の座標からセンサから見た実際の座標へ)
-        res_y = self.z * math.tan(math.radians(rad_y)) * ave_y / 240 #座標変換(画像の座標からセンサから見た実際の座標へ)
-        print("calculated\n res_x:{}".format(res_x))
-        print("res_y:{}".format(res_y))
-
-        self.pick( res_x, res_y)
-        """              
+    
     def search(self, num):
         robot = moveit_commander.RobotCommander()
         arm = moveit_commander.MoveGroupCommander("arm")
@@ -214,7 +201,7 @@ class ArmJointTrajectoryExample(object):
        
         self.go()
 
-    def go(self):
+    def go(self): 
         #投げる1(振りかぶり)
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
@@ -230,14 +217,14 @@ class ArmJointTrajectoryExample(object):
         self._client.send_goal(goal)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         
-        rospy.sleep(1) #何秒後にグリッパーを開くか
+        rospy.sleep(0.5) #何秒後にグリッパーを開くか
 
         #投げる2(中間)
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint","crane_x7_shoulder_revolute_part_tilt_joint","crane_x7_upper_arm_revolute_part_twist_joint","crane_x7_upper_arm_revolute_part_rotate_joint","crane_x7_lower_arm_fixed_part_joint","crane_x7_lower_arm_revolute_part_joint","crane_x7_wrist_joint"]
   
-        joint_values = [0.00, 0.50, 0.00, -0.00, -0.00, 0.00, 0.00]
+        joint_values = [0.00, 0.80, 0.00, -0.00, -0.00, 0.00, 0.00]
         
         for i, p in enumerate(joint_values):
             point.positions.append(p)
@@ -247,12 +234,27 @@ class ArmJointTrajectoryExample(object):
         self._client.send_goal(goal)
         self._client.wait_for_result(timeout=rospy.Duration(100.0))
         
+
+        #投げる3(中間)
+        point = JointTrajectoryPoint()
+        goal = FollowJointTrajectoryGoal()
+        goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint","crane_x7_shoulder_revolute_part_tilt_joint","crane_x7_upper_arm_revolute_part_twist_joint","crane_x7_upper_arm_revolute_part_rotate_joint","crane_x7_lower_arm_fixed_part_joint","crane_x7_lower_arm_revolute_part_joint","crane_x7_wrist_joint"]
+  
+        joint_values = [0.00, 0.30, 0.00, -0.50, -0.00, 0.00, -0.00]
+        
+        for i, p in enumerate(joint_values):
+            point.positions.append(p)
+        
+        point.time_from_start = rospy.Duration(secs=0.1)
+        goal.trajectory.points.append(point)
+        self._client.send_goal(goal)
+
         #投げ終わり
         point = JointTrajectoryPoint()
         goal = FollowJointTrajectoryGoal()
         goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint","crane_x7_shoulder_revolute_part_tilt_joint","crane_x7_upper_arm_revolute_part_twist_joint","crane_x7_upper_arm_revolute_part_rotate_joint","crane_x7_lower_arm_fixed_part_joint","crane_x7_lower_arm_revolute_part_joint","crane_x7_wrist_joint"]
 
-        joint_values = [0.00, -0.43, -0.00, -0.00, -0.00, -0.00, 0.00]
+        joint_values = [0.00, -0.15, -0.00, -0.80, -0.00, -0.00, -0.00]
         #-1.60
         position = math.radians(50.0)
         effort  = 1.0
@@ -266,13 +268,14 @@ class ArmJointTrajectoryExample(object):
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         
-        rospy.sleep(0.15) #何秒後にグリッパーを開くか
+        rospy.sleep(0.05) #何秒後にグリッパーを開くか
         
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
-        self._client.wait_for_result(timeout=rospy.Duration(100.0))    
+        self._client.wait_for_result(timeout=rospy.Duration(100.0))
+
         print("exit")
         sys.exit(1)
-        
+           
     def feedback(self,msg):
         print("feedback callback")
 

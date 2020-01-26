@@ -93,7 +93,6 @@ class ArmJointTrajectoryExample(object):
         goal.trajectory.points.append(point)
         self._client.send_goal(goal)
         print("wait start")  
-        #time.sleep(2.5)
         rospy.sleep(2.5)
         print("wait end") 
         self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)

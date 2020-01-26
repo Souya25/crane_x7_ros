@@ -43,10 +43,7 @@ class ArmJointTrajectoryExample(object):
         self.y = 0 
         self.z = 0
         self.count=0
-        self.tar_x = 0
-        self.tar_y = 0
-        self.mode = 0
-        self.kaisuu =0
+       
         if not self.gripper_client.wait_for_server(rospy.Duration(5.0)):
             rospy.logerr("Exiting - Gripper Action Server Not Found.")
             rospy.signal_shutdown("Action Server not found.")
@@ -71,24 +68,16 @@ class ArmJointTrajectoryExample(object):
                 global sum_y
                 sum_y += ms.y #軸変換(センサのx軸をマニピュレータのy軸に合わせる)
                 self.count += 1
-            elif self.count == 200:
+            else:
                 print("ave_x :{}".format(sum_x/self.count))
                 print("ave_y :{}".format(sum_y/self.count))
-                self.mode = ms.theta
-                self.tar_x = (sum_x/self.count)
-                self.tar_y = (sum_y/self.count)
-                self.count += 1
-                print("already get data")
-                #self.calculate(sum_x/self.count,sum_y/self.count) #平均取ったものをself.calculateを送る
-
+                self.calculate(sum_x/self.count,sum_y/self.count) #平均取ったものをself.calculateを送る
         else :
+            self.search_num += 1
             print("\n-----------------\nCan't find unko\n----------------------")
-            self.kaisuu += 1
-            print(self.kaisuu)
-            #self.search(self.search_num)
-            self.mode = ms.theta
+            self.search(self.search_num)
         print("count = {}".format(self.count))
-        """ 
+    
     def calculate( self, ave_x, ave_y):
         
         print("ave_x:{}".format(ave_x))
@@ -101,7 +90,7 @@ class ArmJointTrajectoryExample(object):
         print("res_y:{}".format(res_y))
 
         self.pick( res_x, res_y)
-        """              
+                      
     def search(self, num):
         robot = moveit_commander.RobotCommander()
         arm = moveit_commander.MoveGroupCommander("arm")
@@ -152,26 +141,76 @@ class ArmJointTrajectoryExample(object):
         self.x = search_x 
         self.y = search_y
         self.z = search_z 
-         
-        print("\nsleepstart in search")
-        rospy.sleep(7)
-        print("sleepend in search")
+        
+        rospy.sleep(2.0)
         if num == 0:
             self.sub = rospy.Subscriber("bool", Pose2D, self.callback)
         elif num == 1:
             self.sub = rospy.Subscriber("bool1", Pose2D, self.callback)
         elif num == 2:
-            self.sub = rospy.Subscriber("bool2", Pose2D, self.callback)
+            self.sub = rospy.Subscriber("bool", Pose2D, self.callback)
+    
+    def search_red(self):
+        robot = moveit_commander.RobotCommander()
+        arm = moveit_commander.MoveGroupCommander("arm")
+        arm.set_max_velocity_scaling_factor(0.1)
+        gripper = moveit_commander.MoveGroupCommander("gripper")
 
-    def pick(self):
+        while len([s for s in rosnode.get_node_names() if 'rviz' in s]) == 0:
+            rospy.sleep(1.0)
+        rospy.sleep(1.0)
+         
+        print("Group names:")
+        print(robot.get_group_names())
+
+        print("Current state:")
+        print(robot.get_current_state())
+
+        # アーム初期ポーズを表示
+        arm_initial_pose = arm.get_current_pose().pose
+        print("Arm initial pose:")
+        print(arm_initial_pose)
+
+        gripper.go()
+
+        
+          
+        #正面見る
+        point = JointTrajectoryPoint()
+        goal = FollowJointTrajectoryGoal()
+
+        goal.trajectory.joint_names = ["crane_x7_shoulder_fixed_part_pan_joint", "crane_x7_shoulder_revolute_part_tilt_joint",
+                                       "crane_x7_upper_arm_revolute_part_twist_joint", "crane_x7_upper_arm_revolute_part_rotate_joint",
+                                       "crane_x7_lower_arm_fixed_part_joint", "crane_x7_lower_arm_revolute_part_joint",
+                                       "crane_x7_wrist_joint",]
+        
+        
+        joint_values = [ 0, 0, 0, 0, 0, 1.57, 1.57]
+
+
+        position = math.radians(10.0)
+        effort  = 1.0
+        self.gripper_goal.command.position = position
+        self.gripper_goal.command.max_effort = effort
+                
+        
+        point.time_from_start = rospy.Duration(secs=1.0)
+        goal.trajectory.points.append(point)
+        self._client.send_goal(goal)
+        print("wait start")  
+        time.sleep(0.01)
+        print("wait end")  
+        self.gripper_client.send_goal(self.gripper_goal,feedback_cb=self.feedback)
+        self._client.wait_for_result(timeout=rospy.Duration(100.0))
+        print(goal)
+
+        
+        print("go end") 
+        rospy.sleep(2.0)
+        print("sleep end")
+
+    def pick(self, res_x, res_y):
        
-        rad_y = 18  
-        rad_x = rad_y * 1.33
-        self.tar_x = self.z * math.tan(math.radians(rad_x)) * self.tar_x / 320  #座標変換(画像の座標からセンサから見た実際の座標へ)
-        self.tar_y = self.z * math.tan(math.radians(rad_y)) * self.tar_y / 240 #座標変換(画像の座標からセンサから見た実際の座標へ)
-        print("calculated\n res_x:{}".format(self.tar_x))
-        print("res_y:{}".format(self.tar_y))
-
         robot = moveit_commander.RobotCommander()
         arm = moveit_commander.MoveGroupCommander("arm")
         arm.set_max_velocity_scaling_factor(0.1)
@@ -185,12 +224,9 @@ class ArmJointTrajectoryExample(object):
         #offset_x = 0.05            #カメラと手先のオフセット
         offset_y = 0.03            #カメラと手先のオフセット
         
-        tar_x = self.tar_y + self.x                         #センサの位置にあった原点をマニピュレータの根元へ移動
-        tar_y = -self.tar_x + self.y + offset_y             #センサの位置にあった原点をマニピュレータの根元へ移動
-        print("----------------------------") 
-        print("tar_x = {}".format(tar_x)) 
-        print("tar_y = {}".format(tar_y))
-        print("----------------------------") 
+        tar_x = res_y + self.x                         #センサの位置にあった原点をマニピュレータの根元へ移動
+        tar_y = -res_x + self.y + offset_y             #センサの位置にあった原点をマニピュレータの根元へ移動
+        
         #つかむ前の位置、姿勢 
         target_pose.position.x = tar_x
         target_pose.position.y = tar_y
@@ -277,15 +313,7 @@ class ArmJointTrajectoryExample(object):
         print("feedback callback")
 
 if __name__ == "__main__":
-    rospy.init_node("unko_pitching")
-    unko_pitching = ArmJointTrajectoryExample()
-    unko_pitching.search_num = 0
-    while unko_pitching.search_num < 3:
-        unko_pitching.search(unko_pitching.search_num)
-        rospy.sleep(8.0)
-        print("changepose \n\n")
-        if unko_pitching.mode == 1:
-            unko_pitching.pick()
-            unko_pitching.go()
-        else :
-            unko_pitching.search_num += 1
+    rospy.init_node("arm_joint_trajectory_example")
+    arm_joint_trajectory_example = ArmJointTrajectoryExample()
+    arm_joint_trajectory_example.search(0)
+    rospy.spin() 

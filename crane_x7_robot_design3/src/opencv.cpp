@@ -19,7 +19,9 @@ public:          //変数をpublicで宣言
 private:     //hensuu wo private de sengen
     ros::NodeHandle nh;
     ros::Subscriber sub_rgb, sub_depth;
-    ros::Publisher pub = nh.advertise<geometry_msgs::Pose2D>("bool",100);
+    ros::Publisher pub0 = nh.advertise<geometry_msgs::Pose2D>("bool",1);
+    ros::Publisher pub1 = nh.advertise<geometry_msgs::Pose2D>("bool1",1);
+    ros::Publisher pub2 = nh.advertise<geometry_msgs::Pose2D>("bool2",1);
     double bunbo = 0;
     double sumx, sumy;
 };
@@ -48,10 +50,10 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
     cvtColor( cv_ptr->image,hsv_img,CV_BGR2HSV,3);
    
     
-    //Scalar lower = cv::Scalar(160,50,50);
-    //Scalar upper = cv::Scalar(180,255,255);    
-    Scalar lower = cv::Scalar( 0, 120,  120); //フィルタリングする色の範囲
-    Scalar upper = cv::Scalar( 80, 255, 255);
+    Scalar lower = cv::Scalar(0,200,200);
+    Scalar upper = cv::Scalar(30,255,255);    
+    //Scalar lower = cv::Scalar( 0, 120,  120); //フィルタリングする色の範囲
+    //Scalar upper = cv::Scalar( 80, 255, 255);
 
 
 	// BGRからHSVへ変換
@@ -96,13 +98,18 @@ void depth_estimater::rgbImageCallback(const sensor_msgs::ImageConstPtr& msg){
         gy/=counts;
         ms.x = -320 + gx;    //ms.xは中心を(0,0)としたときのxの値 (画像の右方向をx軸の正とする)
         ms.y = 240 - gy;    //ms.yは中心を(0,0)としたときのyの値 (画像の上方向をy軸の正とする)
-        printf("x = %lf, y = %lf\n", ms.x, ms.y);
         ms.theta = 1;
-        pub.publish(ms);
+        printf("x = %lf, y = %lf theta = %lf\n", ms.x, ms.y, ms.theta);
+        pub0.publish(ms);
+        pub1.publish(ms);
+        pub2.publish(ms);
     }else{
         ms.theta = 0;
-        pub.publish(ms);
-    }
+        pub0.publish(ms);
+        pub1.publish(ms);
+        pub2.publish(ms);
+        printf("x = %lf, y = %lf theta = %lf\n", ms.x, ms.y, ms.theta);
+    } 
 
 
     // マスクを基に入力画像をフィルタリング

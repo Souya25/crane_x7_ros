@@ -10,6 +10,7 @@ class ImageListener:
         self.topic = topic
         self.bridge = CvBridge()
         self.sub = rospy.Subscriber(topic, msg_Image, self.imageDepthCallback)
+        self.sub = rospy.Subscriber(topic, msg_Image, self.imageDepthCallback)
 
     def imageDepthCallback(self, data):
         try:
@@ -22,8 +23,8 @@ class ImageListener:
             return
 
 def main():
-    #topic = '/camera/depth_registered/image_raw'
-    topic = '/camera/depth/image_rect_raw'
+    topic = '/camera/depth_registered/image_raw'
+    #topic = '/camera/depth/image_rect_raw'
     listener = ImageListener(topic)
     rospy.spin()
 
