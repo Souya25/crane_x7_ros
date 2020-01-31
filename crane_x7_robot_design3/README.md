@@ -47,7 +47,7 @@ roslaunch realsense2_camera rs_camera.launch
 うんこを設置した後、次のコマンドを実行します。
 
 ```sh
-rosrun crane_x7_robot_design3 opencv.cpp
+rosrun crane_x7_robot_design3 cam
 ```
 
 次に別端末で以下のコマンドを実行します。
