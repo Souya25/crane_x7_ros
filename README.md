@@ -1,4 +1,5 @@
 # crane_x7_ros
+![秋田犬](https://github.com/yoshitaku-jp/test_doc/blob/images/dog_akitainu.png)
 ---
 [![Build Status](https://travis-ci.org/rt-net/crane_x7_ros.svg?branch=master)](https://travis-ci.org/rt-net/crane_x7_ros)
 
