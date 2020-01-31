@@ -79,6 +79,7 @@ class ArmJointTrajectoryExample(object):
                 self.tar_y = (sum_y/self.count)
                 self.count += 1
                 print("already get data")
+                self.sub = None
                 #self.calculate(sum_x/self.count,sum_y/self.count) #平均取ったものをself.calculateを送る
 
         else :
@@ -141,15 +142,18 @@ class ArmJointTrajectoryExample(object):
         self.z = search_z 
          
         print("\nsleepstart in search")
-        rospy.sleep(7)
+        rospy.sleep(8.0)
         print("sleepend in search")
-        if num == 0:
+        self.sub = rospy.Subscriber("bool", Pose2D, self.callback)
+        """if num == 0:
+            
             self.sub = rospy.Subscriber("bool", Pose2D, self.callback)
         elif num == 1:
             self.sub = rospy.Subscriber("bool1", Pose2D, self.callback)
-        elif num == 2:
+        else:
+        #elif num == 2:
             self.sub = rospy.Subscriber("bool2", Pose2D, self.callback)
-
+        """     
     def pick(self):
        
         rad_y = 18  

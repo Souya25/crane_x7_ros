@@ -233,7 +233,7 @@ class ArmJointTrajectoryExample(object):
         offset_x = 0.05            #カメラと手先のオフセット
         offset_y = 0.03            #カメラと手先のオフセット
         
-        tar_x = res_y + x                         #センサの位置にあった原点をマニピュレータの根元へ移動
+        tar_x = res_y + x + offset_x                        #センサの位置にあった原点をマニピュレータの根元へ移動
         tar_y = -res_x + y + offset_y             #センサの位置にあった原点をマニピュレータの根元へ移動
         
         #つかむ前の位置、姿勢 
