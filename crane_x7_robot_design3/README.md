@@ -21,9 +21,7 @@ git clone https://github.com/Souya25/crane_x7_ros.git
 
 ### RealSense D435iのインストール方法
 こちらを参考にインストールします。
-
 [site1](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md)
-
 [site2](https://github.com/IntelRealSense/realsense-ros)
 
 # RealSense D435i の取り付け方
