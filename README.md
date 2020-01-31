@@ -1,5 +1,4 @@
 # crane_x7_ros
-![秋田犬](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting1.png?raw=true)
 ---
 [![Build Status](https://travis-ci.org/rt-net/crane_x7_ros.svg?branch=master)](https://travis-ci.org/rt-net/crane_x7_ros)
 
