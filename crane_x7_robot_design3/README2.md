@@ -27,7 +27,7 @@ git clone https://github.com/Souya25/crane_x7_ros.git
 
 以下の写真のように取り付けます。
 
-[![写真1](setting1.png)](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting1.png "setting1.png")
+![写真１](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting1.png?raw=true)
 
 [![写真2](setting2.png)](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting2.png "setting2.png")
 
