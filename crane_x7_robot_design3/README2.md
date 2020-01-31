@@ -29,7 +29,7 @@ git clone https://github.com/Souya25/crane_x7_ros.git
 
 ![写真１](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting1.png?raw=true)
 
-[![写真2](setting2.png)](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting2.png "setting2.png")
+![写真2](https://github.com/Souya25/crane_x7_ros/blob/master/pic/setting2.png?raw=true)
 
 # システムの起動方法
 
